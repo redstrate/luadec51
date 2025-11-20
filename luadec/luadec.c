@@ -364,17 +364,6 @@ int main(int argc, char* argv[])
     const char* filename=IS("-") ? NULL : argv[i];
     if (luaL_loadfile(L,filename)!=0) fatal(lua_tostring(L,-1));
   }
-  if (disassemble) {
-    printf("; This file has been disassembled using luadec " VERSION " by sztupy (http://winmo.sztupy.hu)\n");
-    printf("; Command line was: ");
-  } else {
-    printf("-- Decompiled using luadec " VERSION " by sztupy (http://winmo.sztupy.hu)\n");
-    printf("-- Command line was: ");
-  }
-  for (i=1; i<oargc; i++) {
-    printf("%s ",oargv[i]);
-  }
-  printf("\n\n");
   f=combine(L,argc);
   if (guess_locals) {
     luaU_guess_locals(f,0);
