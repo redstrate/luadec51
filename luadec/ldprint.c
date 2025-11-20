@@ -73,7 +73,7 @@ char* getupval(Function * F, int r) {
 #define IsMain(f)	(f->linedefined==0)
 #define fb2int(x)	(((x) & 7) << ((x) >> 3))
 
-#define SET_ERROR(F,e) { StringBuffer_printf(errorStr," -- DECOMPILER ERROR: %s\n", (e)); RawAddStatement((F),errorStr); }
+#define SET_ERROR(F,e) { StringBuffer_printf(errorStr," -- Error: %s", (e)); RawAddStatement((F),errorStr); }
 /*  error = e; errorCode = __LINE__; */ /*if (debug) { printf("DECOMPILER ERROR: %s\n", e);  }*/
 
 static int debug;
