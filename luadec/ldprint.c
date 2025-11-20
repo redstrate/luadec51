@@ -1249,6 +1249,9 @@ void FunctionHeader(Function * F) {
       if (error)
          return;
       StringBuffer_prune(str);
+   } else if (f->numparams == 0 && functionnum != 0) {
+       StringBuffer_add(str, "(...)");
+       AddStatement(F, str);
    }
    F->indent = saveIndent;
    if (!IsMain(f))
@@ -2245,16 +2248,16 @@ char* ProcessCode(const Proto * f, int indent)
 
 						/* upvalue determinition end */
 
-            StringBuffer_set(str, "function");
+            StringBuffer_set(str, "(function");
 						functionnum = c+1;
+            F->indent++;
             StringBuffer_add(str, ProcessCode(f->p[c], F->indent));
 						functionnum = cfnum;
-            for (i = 0; i < F->indent; i++) {
-               StringBuffer_add(str, "   ");
-            }
-            StringBuffer_add(str, "end");
-            if (F->indent == 0)
-               StringBuffer_add(str, "\n");
+            F->indent--;
+          for (i = 0; i < F->indent; i++) {
+              StringBuffer_add(str, "  ");
+          }
+            StringBuffer_add(str, ")end");
             TRY(Assign(F, REGISTER(a), StringBuffer_getRef(str), a, 0, 0));
 						/* need to add upvalue handling */
 						
