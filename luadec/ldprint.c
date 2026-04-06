@@ -2257,7 +2257,7 @@ char* ProcessCode(const Proto * f, int indent)
           for (i = 0; i < F->indent; i++) {
               StringBuffer_add(str, "  ");
           }
-            StringBuffer_add(str, ")end");
+            StringBuffer_add(str, "end)");
             TRY(Assign(F, REGISTER(a), StringBuffer_getRef(str), a, 0, 0));
 						/* need to add upvalue handling */
 						
