@@ -73,7 +73,6 @@ char* getupval(Function * F, int r) {
 #define IsMain(f)	(f->linedefined==0)
 #define fb2int(x)	(((x) & 7) << ((x) >> 3))
 
-#define SET_ERROR(F,e) { StringBuffer_printf(errorStr,"-- Error: %s", (e)); RawAddStatement((F),errorStr); }
 /*  error = e; errorCode = __LINE__; */ /*if (debug) { printf("DECOMPILER ERROR: %s\n", e);  }*/
 
 static int debug;
@@ -1315,9 +1314,9 @@ void DeclarePendingLocals(Function * F) {
 	StringBuffer *str = StringBuffer_new(NULL);
 	if (SET_CTR(F->tpend)>0) {
 		if (guess_locals) {
-			StringBuffer_set(str,"-- Warning: pending registers.");
+			LUA_WARN(str,"-- Warning: pending registers.");
 		} else {
-			StringBuffer_set(str,"-- Warning: pending registers. Declaring locals.");
+			LUA_WARN(str,"-- Warning: pending registers. Declaring locals.");
 			AddStatement(F,str);
 			for (i= 0; i < SET_CTR(F->tpend); i++) {
 				nums[maxnum] = SET(F->tpend, i);
@@ -2266,7 +2265,7 @@ char* ProcessCode(const Proto * f, int indent)
             break;
          }
       default:
-         StringBuffer_printf(str, "-- unhandled opcode? : %-9s\t\n", luaP_opnames[o]);
+         LUA_WARN(str, "-- unhandled opcode? : %-9s\t\n", luaP_opnames[o]);
          TRY(AddStatement(F, str));
          break;
       }
@@ -2302,12 +2301,12 @@ char* ProcessCode(const Proto * f, int indent)
    TRY(FlushBoolean(F));
 
 	 if (SET_CTR(F->tpend)>0) {
-		 StringBuffer_set(str,"-- Warning: undefined locals caused missing assignments!");
+		 LUA_WARN(str,"-- Warning: undefined locals caused missing assignments!");
 		 TRY(AddStatement(F,str));
 	 }
 
 	 while (F->indent>indent+1) {
-		 StringBuffer_set(str,"-- Warning: missing end command somewhere! Added here");
+		 LUA_WARN(str,"-- Warning: missing end command somewhere! Added here");
 		 TRY(AddStatement(F, str));
 		 F->indent--;
 		 StringBuffer_set(str, "end");

@@ -51,4 +51,14 @@ char* StringBuffer_getRef(StringBuffer* this);
 
 void StringBuffer_prune(StringBuffer* this);
 
+// These warnings are quite spammy and mostly useless to someone not working on the decompiler itself
+#define ENABLE_LUA_WARNINGS 0
+#if ENABLE_LUA_WARNINGS
+#define LUA_WARN(...) StringBuffer_printf(__VA_ARGS__)
+#define SET_ERROR(F,e) { StringBuffer_printf(errorStr,"-- Error: %s", (e)); RawAddStatement((F),errorStr); }
+#else
+#define LUA_WARN(...)
+#define SET_ERROR(F,e)
+#endif
+
 #endif
