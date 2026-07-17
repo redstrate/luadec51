@@ -71,6 +71,9 @@ void StringBuffer_set(StringBuffer* this, const char* str) {
 }
 
 void StringBuffer_add(StringBuffer* this, char* str) {
+    if (!str) {
+        return;
+    }
    int len = strlen(str);
    int end = this->usedSize;
    StringBuffer_makeRoom(this, this->usedSize + len+1);

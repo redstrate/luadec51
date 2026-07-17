@@ -730,6 +730,9 @@ char *PrintTable(Function * F, int r, int returnCopy)
    DecTable *tbl =
        (DecTable *) FindInList(&(F->tables), (ListItemCmpFn) MatchTable,
                                &r);
+    if (!tbl) {
+        return result;
+    }
    int numerics = 0;
    DecTableItem *item = (DecTableItem *) tbl->numeric.head;
    if (item) {
