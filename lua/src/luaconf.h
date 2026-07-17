@@ -36,7 +36,7 @@
 #if defined(LUA_USE_LINUX)
 #define LUA_USE_POSIX
 #define LUA_USE_DLOPEN		/* needs an extra library: -ldl */
-//#define LUA_USE_READLINE	/* needs some extra libraries */
+#define LUA_USE_READLINE	/* needs some extra libraries */
 #endif
 
 #if defined(LUA_USE_MACOSX)
@@ -140,7 +140,7 @@
 ** CHANGE that if ptrdiff_t is not adequate on your machine. (On most
 ** machines, ptrdiff_t gives a good choice between int or long.)
 */
-#define LUA_INTEGER	ptrdiff_t
+#define LUA_INTEGER	unsigned int
 
 
 /*
@@ -414,8 +414,8 @@
 #define LUAI_UINT32	unsigned int
 #define LUAI_INT32	int
 #define LUAI_MAXINT32	INT_MAX
-#define LUAI_UMEM	size_t
-#define LUAI_MEM	ptrdiff_t
+#define LUAI_UMEM	unsigned int
+#define LUAI_MEM	unsigned int
 #else
 /* 16-bit ints */
 #define LUAI_UINT32	unsigned long

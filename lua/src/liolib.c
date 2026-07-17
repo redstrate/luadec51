@@ -1,5 +1,5 @@
 /*
-** $Id: liolib.c,v 2.73.1.4 2010/05/14 15:33:51 roberto Exp $
+** $Id: liolib.c,v 2.73.1.3 2008/01/18 17:47:43 roberto Exp $
 ** Standard I/O (and system) library
 ** See Copyright Notice in lua.h
 */
@@ -276,10 +276,7 @@ static int read_number (lua_State *L, FILE *f) {
     lua_pushnumber(L, d);
     return 1;
   }
-  else {
-    lua_pushnil(L);  /* "result" to be removed */
-    return 0;  /* read fails */
-  }
+  else return 0;  /* read fails */
 }
 
 
@@ -295,7 +292,7 @@ static int read_line (lua_State *L, FILE *f) {
   luaL_Buffer b;
   luaL_buffinit(L, &b);
   for (;;) {
-    size_t l;
+    unsigned int l;
     char *p = luaL_prepbuffer(&b);
     if (fgets(p, LUAL_BUFFERSIZE, f) == NULL) {  /* eof? */
       luaL_pushresult(&b);  /* close buffer */
@@ -313,9 +310,9 @@ static int read_line (lua_State *L, FILE *f) {
 }
 
 
-static int read_chars (lua_State *L, FILE *f, size_t n) {
-  size_t rlen;  /* how much to read */
-  size_t nr;  /* number of chars actually read */
+static int read_chars (lua_State *L, FILE *f, unsigned int n) {
+  unsigned int rlen;  /* how much to read */
+  unsigned int nr;  /* number of chars actually read */
   luaL_Buffer b;
   luaL_buffinit(L, &b);
   rlen = LUAL_BUFFERSIZE;  /* try to read that much each time */
@@ -345,7 +342,7 @@ static int g_read (lua_State *L, FILE *f, int first) {
     success = 1;
     for (n = first; nargs-- && success; n++) {
       if (lua_type(L, n) == LUA_TNUMBER) {
-        size_t l = (size_t)lua_tointeger(L, n);
+        unsigned int l = (unsigned int)lua_tointeger(L, n);
         success = (l == 0) ? test_eof(L, f) : read_chars(L, f, l);
       }
       else {
@@ -359,7 +356,7 @@ static int g_read (lua_State *L, FILE *f, int first) {
             success = read_line(L, f);
             break;
           case 'a':  /* file */
-            read_chars(L, f, ~((size_t)0));  /* read MAX_SIZE_T chars */
+            read_chars(L, f, ~((unsigned int)0));  /* read MAX_unsigned int chars */
             success = 1; /* always success */
             break;
           default:
@@ -420,7 +417,7 @@ static int g_write (lua_State *L, FILE *f, int arg) {
           fprintf(f, LUA_NUMBER_FMT, lua_tonumber(L, arg)) > 0;
     }
     else {
-      size_t l;
+      unsigned int l;
       const char *s = luaL_checklstring(L, arg, &l);
       status = status && (fwrite(s, sizeof(char), l, f) == l);
     }

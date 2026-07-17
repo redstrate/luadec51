@@ -1,5 +1,5 @@
 /*
-** $Id: lgc.c,v 2.38.1.2 2011/03/18 18:05:38 roberto Exp $
+** $Id: lgc.c,v 2.38.1.1 2007/12/27 13:02:25 roberto Exp $
 ** Garbage Collector
 ** See Copyright Notice in lua.h
 */
@@ -125,9 +125,9 @@ static void marktmu (global_State *g) {
 
 
 /* move `dead' udata that need finalization to list `tmudata' */
-size_t luaC_separateudata (lua_State *L, int all) {
+unsigned int luaC_separateudata (lua_State *L, int all) {
   global_State *g = G(L);
-  size_t deadmem = 0;
+  unsigned int deadmem = 0;
   GCObject **p = &g->mainthread->next;
   GCObject *curr;
   while ((curr = *p) != NULL) {
@@ -320,8 +320,8 @@ static l_mem propagatemark (global_State *g) {
 }
 
 
-static size_t propagateall (global_State *g) {
-  size_t m = 0;
+static unsigned int propagateall (global_State *g) {
+  unsigned int m = 0;
   while (g->gray) m += propagatemark(g);
   return m;
 }
@@ -436,7 +436,7 @@ static void checkSizes (lua_State *L) {
     luaS_resize(L, g->strt.size/2);  /* table is too big */
   /* check size of buffer */
   if (luaZ_sizebuffer(&g->buff) > LUA_MINBUFFER*2) {  /* buffer too big? */
-    size_t newsize = luaZ_sizebuffer(&g->buff) / 2;
+    unsigned int newsize = luaZ_sizebuffer(&g->buff) / 2;
     luaZ_resizebuffer(L, &g->buff, newsize);
   }
 }
@@ -524,7 +524,7 @@ static void remarkupvals (global_State *g) {
 
 static void atomic (lua_State *L) {
   global_State *g = G(L);
-  size_t udsize;  /* total size of userdata to be finalized */
+  unsigned int udsize;  /* total size of userdata to be finalized */
   /* remark occasional upvalues of (maybe) dead threads */
   remarkupvals(g);
   /* traverse objects cautch by write barrier and by 'remarkupvals' */
@@ -627,6 +627,7 @@ void luaC_step (lua_State *L) {
     }
   }
   else {
+    lua_assert(g->totalbytes >= g->estimate);
     setthreshold(g);
   }
 }

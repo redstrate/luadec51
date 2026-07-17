@@ -48,9 +48,9 @@ LUALIB_API int (luaL_callmeta) (lua_State *L, int obj, const char *e);
 LUALIB_API int (luaL_typerror) (lua_State *L, int narg, const char *tname);
 LUALIB_API int (luaL_argerror) (lua_State *L, int numarg, const char *extramsg);
 LUALIB_API const char *(luaL_checklstring) (lua_State *L, int numArg,
-                                                          size_t *l);
+                                                          unsigned int *l);
 LUALIB_API const char *(luaL_optlstring) (lua_State *L, int numArg,
-                                          const char *def, size_t *l);
+                                          const char *def, unsigned int *l);
 LUALIB_API lua_Number (luaL_checknumber) (lua_State *L, int numArg);
 LUALIB_API lua_Number (luaL_optnumber) (lua_State *L, int nArg, lua_Number def);
 
@@ -75,7 +75,7 @@ LUALIB_API int (luaL_ref) (lua_State *L, int t);
 LUALIB_API void (luaL_unref) (lua_State *L, int t, int ref);
 
 LUALIB_API int (luaL_loadfile) (lua_State *L, const char *filename);
-LUALIB_API int (luaL_loadbuffer) (lua_State *L, const char *buff, size_t sz,
+LUALIB_API int (luaL_loadbuffer) (lua_State *L, const char *buff, unsigned int sz,
                                   const char *name);
 LUALIB_API int (luaL_loadstring) (lua_State *L, const char *s);
 
@@ -144,7 +144,7 @@ typedef struct luaL_Buffer {
 
 LUALIB_API void (luaL_buffinit) (lua_State *L, luaL_Buffer *B);
 LUALIB_API char *(luaL_prepbuffer) (luaL_Buffer *B);
-LUALIB_API void (luaL_addlstring) (luaL_Buffer *B, const char *s, size_t l);
+LUALIB_API void (luaL_addlstring) (luaL_Buffer *B, const char *s, unsigned int l);
 LUALIB_API void (luaL_addstring) (luaL_Buffer *B, const char *s);
 LUALIB_API void (luaL_addvalue) (luaL_Buffer *B);
 LUALIB_API void (luaL_pushresult) (luaL_Buffer *B);

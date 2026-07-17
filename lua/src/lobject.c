@@ -179,14 +179,14 @@ const char *luaO_pushfstring (lua_State *L, const char *fmt, ...) {
 }
 
 
-void luaO_chunkid (char *out, const char *source, size_t bufflen) {
+void luaO_chunkid (char *out, const char *source, unsigned int bufflen) {
   if (*source == '=') {
     strncpy(out, source+1, bufflen);  /* remove first char */
     out[bufflen-1] = '\0';  /* ensures null termination */
   }
   else {  /* out = "source", or "...source" */
     if (*source == '@') {
-      size_t l;
+      unsigned int l;
       source++;  /* skip the `@' */
       bufflen -= sizeof(" '...' ");
       l = strlen(source);
@@ -198,7 +198,7 @@ void luaO_chunkid (char *out, const char *source, size_t bufflen) {
       strcat(out, source);
     }
     else {  /* out = [string "string"] */
-      size_t len = strcspn(source, "\n\r");  /* stop at first newline */
+      unsigned int len = strcspn(source, "\n\r");  /* stop at first newline */
       bufflen -= sizeof(" [string \"...\"] ");
       if (len > bufflen) len = bufflen;
       strcpy(out, "[string \"");

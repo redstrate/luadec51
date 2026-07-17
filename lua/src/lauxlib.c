@@ -155,7 +155,7 @@ LUALIB_API void luaL_checkany (lua_State *L, int narg) {
 }
 
 
-LUALIB_API const char *luaL_checklstring (lua_State *L, int narg, size_t *len) {
+LUALIB_API const char *luaL_checklstring (lua_State *L, int narg, unsigned int *len) {
   const char *s = lua_tolstring(L, narg, len);
   if (!s) tag_error(L, narg, LUA_TSTRING);
   return s;
@@ -163,7 +163,7 @@ LUALIB_API const char *luaL_checklstring (lua_State *L, int narg, size_t *len) {
 
 
 LUALIB_API const char *luaL_optlstring (lua_State *L, int narg,
-                                        const char *def, size_t *len) {
+                                        const char *def, unsigned int *len) {
   if (lua_isnoneornil(L, narg)) {
     if (len)
       *len = (def ? strlen(def) : 0);
@@ -340,7 +340,7 @@ LUALIB_API int luaL_getn (lua_State *L, int t) {
 LUALIB_API const char *luaL_gsub (lua_State *L, const char *s, const char *p,
                                                                const char *r) {
   const char *wild;
-  size_t l = strlen(p);
+  unsigned int l = strlen(p);
   luaL_Buffer b;
   luaL_buffinit(L, &b);
   while ((wild = strstr(s, p)) != NULL) {
@@ -390,13 +390,13 @@ LUALIB_API const char *luaL_findtable (lua_State *L, int idx,
 
 
 #define bufflen(B)	((B)->p - (B)->buffer)
-#define bufffree(B)	((size_t)(LUAL_BUFFERSIZE - bufflen(B)))
+#define bufffree(B)	((unsigned int)(LUAL_BUFFERSIZE - bufflen(B)))
 
 #define LIMIT	(LUA_MINSTACK/2)
 
 
 static int emptybuffer (luaL_Buffer *B) {
-  size_t l = bufflen(B);
+  unsigned int l = bufflen(B);
   if (l == 0) return 0;  /* put nothing on stack */
   else {
     lua_pushlstring(B->L, B->buffer, l);
@@ -411,9 +411,9 @@ static void adjuststack (luaL_Buffer *B) {
   if (B->lvl > 1) {
     lua_State *L = B->L;
     int toget = 1;  /* number of levels to concat */
-    size_t toplen = lua_strlen(L, -1);
+    unsigned int toplen = lua_strlen(L, -1);
     do {
-      size_t l = lua_strlen(L, -(toget+1));
+      unsigned int l = lua_strlen(L, -(toget+1));
       if (B->lvl - toget + 1 >= LIMIT || toplen > l) {
         toplen += l;
         toget++;
@@ -433,7 +433,7 @@ LUALIB_API char *luaL_prepbuffer (luaL_Buffer *B) {
 }
 
 
-LUALIB_API void luaL_addlstring (luaL_Buffer *B, const char *s, size_t l) {
+LUALIB_API void luaL_addlstring (luaL_Buffer *B, const char *s, unsigned int l) {
   while (l--)
     luaL_addchar(B, *s++);
 }
@@ -453,7 +453,7 @@ LUALIB_API void luaL_pushresult (luaL_Buffer *B) {
 
 LUALIB_API void luaL_addvalue (luaL_Buffer *B) {
   lua_State *L = B->L;
-  size_t vl;
+  unsigned int vl;
   const char *s = lua_tolstring(L, -1, &vl);
   if (vl <= bufffree(B)) {  /* fit into buffer? */
     memcpy(B->p, s, vl);  /* put it there */
@@ -526,7 +526,7 @@ typedef struct LoadF {
 } LoadF;
 
 
-static const char *getF (lua_State *L, void *ud, size_t *size) {
+static const char *getF (lua_State *L, void *ud, unsigned int *size) {
   LoadF *lf = (LoadF *)ud;
   (void)L;
   if (lf->extraline) {
@@ -592,11 +592,11 @@ LUALIB_API int luaL_loadfile (lua_State *L, const char *filename) {
 
 typedef struct LoadS {
   const char *s;
-  size_t size;
+  unsigned int size;
 } LoadS;
 
 
-static const char *getS (lua_State *L, void *ud, size_t *size) {
+static const char *getS (lua_State *L, void *ud, unsigned int *size) {
   LoadS *ls = (LoadS *)ud;
   (void)L;
   if (ls->size == 0) return NULL;
@@ -606,7 +606,7 @@ static const char *getS (lua_State *L, void *ud, size_t *size) {
 }
 
 
-LUALIB_API int luaL_loadbuffer (lua_State *L, const char *buff, size_t size,
+LUALIB_API int luaL_loadbuffer (lua_State *L, const char *buff, unsigned int size,
                                 const char *name) {
   LoadS ls;
   ls.s = buff;
@@ -624,7 +624,7 @@ LUALIB_API int (luaL_loadstring) (lua_State *L, const char *s) {
 /* }====================================================== */
 
 
-static void *l_alloc (void *ud, void *ptr, size_t osize, size_t nsize) {
+static void *l_alloc (void *ud, void *ptr, unsigned int osize, unsigned int nsize) {
   (void)ud;
   (void)osize;
   if (nsize == 0) {

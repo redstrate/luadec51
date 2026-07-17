@@ -1,5 +1,5 @@
 /*
-** $Id: llex.c,v 2.20.1.2 2009/11/23 14:58:22 roberto Exp $
+** $Id: llex.c,v 2.20.1.1 2007/12/27 13:02:25 roberto Exp $
 ** Lexical Analyzer
 ** See Copyright Notice in lua.h
 */
@@ -51,7 +51,7 @@ const char *const luaX_tokens [] = {
 static void save (LexState *ls, int c) {
   Mbuffer *b = ls->buff;
   if (b->n + 1 > b->buffsize) {
-    size_t newsize;
+    unsigned int newsize;
     if (b->buffsize >= MAX_SIZET/2)
       luaX_lexerror(ls, "lexical element too long", 0);
     newsize = b->buffsize * 2;
@@ -114,14 +114,12 @@ void luaX_syntaxerror (LexState *ls, const char *msg) {
 }
 
 
-TString *luaX_newstring (LexState *ls, const char *str, size_t l) {
+TString *luaX_newstring (LexState *ls, const char *str, unsigned int l) {
   lua_State *L = ls->L;
   TString *ts = luaS_newlstr(L, str, l);
   TValue *o = luaH_setstr(L, ls->fs->h, ts);  /* entry for `str' */
-  if (ttisnil(o)) {
+  if (ttisnil(o))
     setbvalue(o, 1);  /* make sure `str' will not be collected */
-    luaC_checkGC(L);
-  }
   return ts;
 }
 
@@ -169,7 +167,7 @@ static int check_next (LexState *ls, const char *set) {
 
 
 static void buffreplace (LexState *ls, char from, char to) {
-  size_t n = luaZ_bufflen(ls->buff);
+  unsigned int n = luaZ_bufflen(ls->buff);
   char *p = luaZ_buffer(ls->buff);
   while (n--)
     if (p[n] == from) p[n] = to;

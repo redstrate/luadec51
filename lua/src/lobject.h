@@ -202,7 +202,7 @@ typedef union TString {
     CommonHeader;
     lu_byte reserved;
     unsigned int hash;
-    size_t len;
+    unsigned int len;
   } tsv;
 } TString;
 
@@ -218,7 +218,7 @@ typedef union Udata {
     CommonHeader;
     struct Table *metatable;
     struct Table *env;
-    size_t len;
+    unsigned int len;
   } uv;
 } Udata;
 
@@ -374,7 +374,7 @@ LUAI_FUNC int luaO_str2d (const char *s, lua_Number *result);
 LUAI_FUNC const char *luaO_pushvfstring (lua_State *L, const char *fmt,
                                                        va_list argp);
 LUAI_FUNC const char *luaO_pushfstring (lua_State *L, const char *fmt, ...);
-LUAI_FUNC void luaO_chunkid (char *out, const char *source, size_t len);
+LUAI_FUNC void luaO_chunkid (char *out, const char *source, unsigned int len);
 
 
 #endif

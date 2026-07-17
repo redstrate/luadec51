@@ -1,6 +1,8 @@
 Overview
 ========
 
+**NOTE:** I shoddily replacing all usages of pointer types with unsigned int so this works on 64-bit machines for now.
+
 LuaDec for Lua 5.1 is a Lua decompiler targeting lua versions 5.1.x
 
 It is based on Hisham Muhammad's luadec which targeted lua 5.0.x

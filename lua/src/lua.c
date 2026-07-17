@@ -162,7 +162,7 @@ static const char *get_prompt (lua_State *L, int firstline) {
 
 static int incomplete (lua_State *L, int status) {
   if (status == LUA_ERRSYNTAX) {
-    size_t lmsg;
+    unsigned int lmsg;
     const char *msg = lua_tolstring(L, -1, &lmsg);
     const char *tp = msg + lmsg - (sizeof(LUA_QL("<eof>")) - 1);
     if (strstr(msg, LUA_QL("<eof>")) == tp) {
@@ -177,7 +177,7 @@ static int incomplete (lua_State *L, int status) {
 static int pushline (lua_State *L, int firstline) {
   char buffer[LUA_MAXINPUT];
   char *b = buffer;
-  size_t l;
+  unsigned int l;
   const char *prmt = get_prompt(L, firstline);
   if (lua_readline(L, b, prmt) == 0)
     return 0;  /* no input */
