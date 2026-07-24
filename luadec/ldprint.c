@@ -1464,7 +1464,7 @@ char* ProcessCode(const Proto * f, int indent)
 
       TRY(DeclareLocals(F));
       TRY(ReleaseLocals(F));
-      
+
       while (RemoveFromSet(F->do_opens, pc)) {
          StringBuffer_set(str, "do");
          TRY(AddStatement(F, str));
@@ -1900,7 +1900,8 @@ char* ProcessCode(const Proto * f, int indent)
                /*
                 * constant boolean value
                 */
-               pc = dest - 2;
+                // FIXME: breaks game_script/custom/009/ctsmkdweatherforecast_00925.luab and not sure why, hacking around it for now
+               // pc = dest - 2;
             } else if (sbc == 0) {
                /* dummy jump -- ignore it */
                break;

@@ -422,9 +422,11 @@ void luaU_guess_locals(Proto * f, int main) {
       lastfree++;
     }
 
-    while (blockend[block] <= pc+1) {
-      block--;
-    }
+	if (block != 0) {
+	    while (blockend[block] <= pc+1) {
+	        block--;
+	    }
+	}
     while ((lastfree!=0) && (regblock[lastfree-1] <= pc+1)) {
       lastfree--;
       regusage[lastfree]=0;

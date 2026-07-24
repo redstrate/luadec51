@@ -140,7 +140,7 @@
 ** CHANGE that if ptrdiff_t is not adequate on your machine. (On most
 ** machines, ptrdiff_t gives a good choice between int or long.)
 */
-#define LUA_INTEGER	unsigned int
+#define LUA_INTEGER int
 
 
 /*
@@ -415,7 +415,7 @@
 #define LUAI_INT32	int
 #define LUAI_MAXINT32	INT_MAX
 #define LUAI_UMEM	unsigned int
-#define LUAI_MEM	unsigned int
+#define LUAI_MEM	int
 #else
 /* 16-bit ints */
 #define LUAI_UINT32	unsigned long
